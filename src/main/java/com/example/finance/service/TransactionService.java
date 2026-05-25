@@ -46,16 +46,49 @@ public class TransactionService {
         return toResponse(transactionRepository.save(transaction));
     }
 
-    public List<TransactionResponse> list(LocalDate startDate, LocalDate endDate, Long categoryId, CategoryType type) {
-        User user = currentUserService.requireCurrentUser();
-        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "startDate cannot be after endDate");
-        }
-        return transactionRepository.search(user, startDate, endDate, categoryId, type)
-                .stream()
-                .map(this::toResponse)
+    // public List<TransactionResponse> list(LocalDate startDate, LocalDate endDate, Long categoryId, CategoryType type) {
+    //     User user = currentUserService.requireCurrentUser();
+    //     if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+    //         throw new ApiException(HttpStatus.BAD_REQUEST, "startDate cannot be after endDate");
+    //     }
+    //     return transactionRepository.search(user, startDate, endDate, categoryId, type)
+    //             .stream()
+    //             .map(this::toResponse)
+    //             .toList();
+    // }
+
+    public List<TransactionResponse> list(
+        LocalDate startDate,
+        LocalDate endDate,
+        Long categoryId,
+        CategoryType type) {
+
+    User user = currentUserService.requireCurrentUser();
+
+    if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+        throw new ApiException(
+                HttpStatus.BAD_REQUEST,
+                "startDate cannot be after endDate");
+    }
+
+    List<Transaction> transactions =
+            transactionRepository.search(
+                    user,
+                    startDate,
+                    endDate,
+                    categoryId,
+                    type);
+
+    if (categoryId != null) {
+        transactions = transactions.stream()
+                .filter(t -> t.getCategory().getId().equals(categoryId))
                 .toList();
     }
+
+    return transactions.stream()
+            .map(this::toResponse)
+            .toList();
+}
 
     @Transactional
     public TransactionResponse update(Long id, TransactionUpdateRequest request) {
