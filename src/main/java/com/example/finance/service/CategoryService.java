@@ -68,6 +68,11 @@ public class CategoryService {
     }
 
     private CategoryResponse toResponse(Category category) {
-        return new CategoryResponse(category.getId(), category.getName(), category.getType(), category.isCustom());
+        return new CategoryResponse(
+                category.getId(),
+                category.getName(),
+                category.getType(),
+                category.isCustom(),
+                category.isCustom());
     }
 }

@@ -38,6 +38,9 @@ public class GoalService {
         User user = currentUserService.requireCurrentUser();
         validateTargetDate(request.targetDate());
         LocalDate startDate = request.startDate() == null ? LocalDate.now() : request.startDate();
+        if (startDate.isAfter(request.targetDate())) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Start date cannot be after target date");
+        }
         SavingsGoal goal = new SavingsGoal(
                 request.goalName().trim(),
                 request.targetAmount(),
@@ -86,9 +89,9 @@ public class GoalService {
                 goal.getTargetAmount(),
                 goal.getTargetDate(),
                 goal.getStartDate(),
-                progress.setScale(2, RoundingMode.HALF_UP),
-                percentage,
-                remaining);
+                formatMoneyOrZero(progress),
+                formatPercentage(percentage),
+                formatMoney(remaining));
     }
 
     private BigDecimal currentProgress(SavingsGoal goal) {
@@ -117,5 +120,22 @@ public class GoalService {
         if (!targetDate.isAfter(LocalDate.now())) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "Target date must be in the future");
         }
+    }
+
+    private String formatMoneyOrZero(BigDecimal value) {
+        BigDecimal scaled = value.setScale(2, RoundingMode.HALF_UP);
+        return scaled.compareTo(BigDecimal.ZERO) == 0 ? "0" : scaled.toPlainString();
+    }
+
+    private String formatMoney(BigDecimal value) {
+        return value.setScale(2, RoundingMode.HALF_UP).toPlainString();
+    }
+
+    private String formatPercentage(BigDecimal value) {
+        BigDecimal scaled = value.setScale(2, RoundingMode.HALF_UP).stripTrailingZeros();
+        if (scaled.scale() <= 0) {
+            return scaled.setScale(1).toPlainString();
+        }
+        return scaled.toPlainString();
     }
 }

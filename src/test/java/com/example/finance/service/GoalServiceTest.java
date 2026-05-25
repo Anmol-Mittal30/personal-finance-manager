@@ -54,8 +54,8 @@ class GoalServiceTest {
 
         GoalResponse response = service.toResponse(goal);
 
-        assertThat(response.currentProgress()).isEqualByComparingTo("1000.00");
-        assertThat(response.progressPercentage()).isEqualByComparingTo("20.00");
-        assertThat(response.remainingAmount()).isEqualByComparingTo("4000.00");
+        assertThat(response.currentProgress()).isEqualTo("1000.00");
+        assertThat(response.progressPercentage()).isEqualTo("20.0");
+        assertThat(response.remainingAmount()).isEqualTo("4000.00");
     }
 }

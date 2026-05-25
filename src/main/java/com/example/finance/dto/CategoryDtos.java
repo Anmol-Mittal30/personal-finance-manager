@@ -12,6 +12,11 @@ public final class CategoryDtos {
     public record CategoryRequest(@NotBlank String name, @NotNull CategoryType type) {
     }
 
-    public record CategoryResponse(Long id, String name, CategoryType type, @JsonProperty("isCustom") boolean isCustom) {
+    public record CategoryResponse(
+            Long id,
+            String name,
+            CategoryType type,
+            boolean custom,
+            @JsonProperty("isCustom") boolean isCustom) {
     }
 }

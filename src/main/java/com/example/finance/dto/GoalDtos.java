@@ -3,8 +3,8 @@ package com.example.finance.dto;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.math.BigDecimal;
 
 public final class GoalDtos {
     private GoalDtos() {
@@ -28,8 +28,8 @@ public final class GoalDtos {
             BigDecimal targetAmount,
             LocalDate targetDate,
             LocalDate startDate,
-            BigDecimal currentProgress,
-            BigDecimal progressPercentage,
-            BigDecimal remainingAmount) {
+            String currentProgress,
+            String progressPercentage,
+            String remainingAmount) {
     }
 }

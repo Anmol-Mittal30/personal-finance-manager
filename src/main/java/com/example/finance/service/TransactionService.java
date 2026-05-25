@@ -65,9 +65,6 @@ public class TransactionService {
         if (!transaction.getUser().getId().equals(user.getId())) {
             throw new ApiException(HttpStatus.NOT_FOUND, "Transaction not found");
         }
-        if (request.date() != null) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Transaction date cannot be updated");
-        }
         if (request.amount() != null) {
             transaction.setAmount(request.amount());
         }
